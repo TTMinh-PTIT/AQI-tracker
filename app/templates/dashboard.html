@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>AQI Hà Nội</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Chất lượng không khí Hà Nội</h1>
+    <div class="station-list">
+        {% for s in stations %}
+        <div class="station-card">
+            <h2>{{ s.name }}</h2>
+            <p class="aqi-value">AQI: {{ s.aqi }}</p>
+            <p class="updated">Cập nhật: {{ s.recorded_at }}</p>
+            <a href="/dashboard/{{ s.station_id }}">Xem chi tiết & lịch sử</a>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

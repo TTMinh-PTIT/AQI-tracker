@@ -1,0 +1,5 @@
+fastapi
+psycopg2-binary
+uvicorn
+python-dotenv
+jinja2

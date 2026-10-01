@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ current.name }} - Chi tiết AQI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <a href="/dashboard">&larr; Quay lại danh sách</a>
+    <h1>{{ current.name }}</h1>
+
+    <div class="current-summary">
+        <p class="aqi-value">AQI hiện tại: {{ current.aqi }}</p>
+        <p>PM2.5: {{ current.pm25 }} | PM10: {{ current.pm10 }}</p>
+        <p>Cập nhật: {{ current.recorded_at }}</p>
+    </div>
+
+    <h2>Lịch sử 7 ngày qua</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Thời gian</th>
+                <th>AQI</th>
+                <th>PM2.5</th>
+                <th>PM10</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in history %}
+            <tr>
+                <td>{{ r.recorded_at }}</td>
+                <td>{{ r.aqi }}</td>
+                <td>{{ r.pm25 }}</td>
+                <td>{{ r.pm10 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
