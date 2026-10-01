@@ -1,0 +1,4 @@
+apscheduler
+requests
+python-dotenv
+psycopg2-binary
