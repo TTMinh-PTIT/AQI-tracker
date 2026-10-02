@@ -2,18 +2,19 @@ name: Push and build Docker images
 
 on:
   push:
+    branches: [main]
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
      - name: Checkout Code
-       uses: docker/checkout@v4
+       uses: actions/checkout@v4
 
      - name: Login Docker hub
        uses: docker/login-action@v3
        with:
-          username: ${{DOCKERHUB_USERNAME}}
-          password: ${{DOCKERHUB_PASSWORD}}
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_PASSWORD}}
 
      - name: Build and push app images
        uses: docker/build-push-action@v5
@@ -22,7 +23,7 @@ jobs:
           push: true
           tags: ${{secrets.DOCKERHUB_USERNAME}}/aqi-tracker-app
 
-      -name: Build and push fetcher images
+     - name: Build and push fetcher images
        uses: docker/build-push-action@v5
        with:
           context: ./fetcher
