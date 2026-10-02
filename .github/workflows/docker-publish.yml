@@ -6,16 +6,16 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      -name: Checkout Code
+     - name: Checkout Code
        uses: docker/checkout@v4
 
-      -name: Login Docker hub
+     - name: Login Docker hub
        uses: docker/login-action@v3
        with:
           username: ${{DOCKERHUB_USERNAME}}
           password: ${{DOCKERHUB_PASSWORD}}
 
-      -name: Build and push app images
+     - name: Build and push app images
        uses: docker/build-push-action@v5
        with:
           context: ./app
