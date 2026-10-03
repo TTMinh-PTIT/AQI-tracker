@@ -14,21 +14,30 @@ def get_data(station_id: str):
     else:
         print("Error: ",response.status_code)
         return None
+    
+def safe_number(value):
+    if value is None or value == "-":
+        return None
+    try:
+        return float(value)
+    except (ValueError, TypeError):
+        return None
+
 def parse_reading(raw_data: dict) -> dict:
     d = raw_data["data"]
     iaqi = d.get("iaqi", {})
-    geo = d.get("city", {}).get("geo", [None, None]) 
+    geo = d.get("city", {}).get("geo", [None, None])
     return {
         "station_id": d.get("idx"),
         "station_name": d.get("city", {}).get("name"),
-        "lon":geo[0],
-        "lat":geo[1],
-        "aqi": d.get("aqi"),
-        "pm25": iaqi.get("pm25", {}).get("v"),  
-        "pm10": iaqi.get("pm10", {}).get("v"),
-        "o3": iaqi.get("o3", {}).get("v"),
-        "no2": iaqi.get("no2", {}).get("v"),
-        "co": iaqi.get("co", {}).get("v"),
+        "lat": geo[0],
+        "lon": geo[1],
+        "aqi": safe_number(d.get("aqi")),
+        "pm25": safe_number(iaqi.get("pm25", {}).get("v")),
+        "pm10": safe_number(iaqi.get("pm10", {}).get("v")),
+        "o3": safe_number(iaqi.get("o3", {}).get("v")),
+        "no2": safe_number(iaqi.get("no2", {}).get("v")),
+        "co": safe_number(iaqi.get("co", {}).get("v")),
         "timestamp": d.get("time", {}).get("iso"),
     }
 # if __name__ == '__main__':
