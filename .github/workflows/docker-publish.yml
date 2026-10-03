@@ -21,11 +21,11 @@ jobs:
        with:
           context: ./app
           push: true
-          tags: ${{secrets.DOCKERHUB_USERNAME}}/aqi-tracker-app
+          tags: ${{secrets.DOCKERHUB_USERNAME}}/aqi-tracker-app:latest
 
      - name: Build and push fetcher images
        uses: docker/build-push-action@v5
        with:
           context: ./fetcher
           push: true
-          tags: ${{secrets.DOCKERHUB_USERNAME}}/aqi-tracker-fetcher
+          tags: ${{secrets.DOCKERHUB_USERNAME}}/aqi-tracker-fetcher:latest
