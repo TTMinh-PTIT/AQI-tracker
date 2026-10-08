@@ -39,3 +39,4 @@ jobs:
             cd  aqi-tracker
             docker compose -f Docker-compose.yml pull
             docker compose -f Docker-compose.yml up -d
+            docker compose -f Docker-compose.yml restart nginx
