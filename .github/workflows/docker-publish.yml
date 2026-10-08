@@ -36,6 +36,6 @@ jobs:
           username: ${{secrets.EC2_USER}}
           key: ${{secrets.EC2_SSH_KEY}}
           script: |
-            cd ~ aqi-tracker
+            cd  aqi-tracker
             docker compose -f Docker-compose.yml pull
             docker compose -f Docker-compose.yml up -d
