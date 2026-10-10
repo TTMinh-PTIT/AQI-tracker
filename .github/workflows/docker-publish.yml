@@ -37,6 +37,7 @@ jobs:
           key: ${{secrets.EC2_SSH_KEY}}
           script: |
             cd  aqi-tracker
+            git pull
             docker compose -f Docker-compose.yml pull
             docker compose -f Docker-compose.yml up -d
             docker compose -f Docker-compose.yml restart nginx
