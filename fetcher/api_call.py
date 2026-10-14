@@ -40,13 +40,4 @@ def parse_reading(raw_data: dict) -> dict:
         "co": safe_number(iaqi.get("co", {}).get("v")),
         "timestamp": d.get("time", {}).get("iso"),
     }
-# if __name__ == '__main__':
-#     station_ids=["A112819","A476341","A477292"]
-#     for sid in station_ids:
-#         data = get_data(sid)
-#         if data and data["status"] == "ok":
-#             print(parse_reading(data))
-#         elif data:
-#             print(f"Error for {sid}: ",data["data"])
-#         else:
-#             print(f"Failed to fetch data for {sid}")
+
