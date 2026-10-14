@@ -1,13 +1,195 @@
+:root {
+  --aqi-good: #00e400;
+  --aqi-moderate: #ffff00;
+  --aqi-sensitive: #ff7e00;
+  --aqi-unhealthy: #ff0000;
+  --aqi-very-unhealthy: #8f3f97;
+  --aqi-hazardous: #7e0023;
+
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface-hover: #273449;
+  --border: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --accent: #38bdf8;
+
+  --radius: 12px;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-  background-color: pink;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.5;
+  padding: 24px 16px 60px;
 }
 
 h1 {
-  color: white;
   text-align: center;
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin-bottom: 32px;
+  letter-spacing: -0.02em;
 }
 
-p {
-  font-family: verdana;
-  font-size: 20px;
+h2 {
+  font-size: 1.3rem;
+  margin: 28px 0 14px;
+  color: var(--text-primary);
+}
+
+/* ===== Dashboard: station card grid ===== */
+.station-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.station-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.station-card:hover {
+  transform: translateY(-2px);
+  background: var(--surface-hover);
+}
+
+.station-card h2 {
+  font-size: 1.05rem;
+  margin: 0 0 10px;
+  color: var(--text-primary);
+}
+
+.aqi-value {
+  display: inline-block;
+  font-size: 1.4rem;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 999px;
+  color: #0f172a;
+  margin-bottom: 10px;
+}
+
+.aqi-value.good       { background: var(--aqi-good); }
+.aqi-value.moderate   { background: var(--aqi-moderate); }
+.aqi-value.sensitive  { background: var(--aqi-sensitive); color: #fff; }
+.aqi-value.unhealthy  { background: var(--aqi-unhealthy); color: #fff; }
+.aqi-value.very-unhealthy { background: var(--aqi-very-unhealthy); color: #fff; }
+.aqi-value.hazardous  { background: var(--aqi-hazardous); color: #fff; }
+
+.pollutants {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.updated {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.station-card a {
+  display: inline-block;
+  font-size: 0.9rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.station-card a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Station detail page ===== */
+.back-link {
+  display: inline-block;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.current-summary {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 8px;
+  max-width: 600px;
+}
+
+.recommendation {
+  background: rgba(56, 189, 248, 0.08);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  margin: 14px 0;
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  max-width: 600px;
+}
+
+/* ===== History table ===== */
+table {
+  width: 100%;
+  max-width: 700px;
+  border-collapse: collapse;
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+thead {
+  background: #0c1526;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px 16px;
+  font-size: 0.88rem;
+}
+
+th {
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+tbody tr {
+  border-top: 1px solid var(--border);
+}
+
+tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+  h1 { font-size: 1.5rem; }
+  .station-list { grid-template-columns: 1fr; }
+  table { font-size: 0.8rem; }
+  th, td { padding: 8px 10px; }
 }
