@@ -6,13 +6,21 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <a href="/dashboard">&larr; Quay lại danh sách</a>
+    <a href="/dashboard" class="back-link">&larr; Quay lại danh sách</a>
     <h1>{{ current.name }}</h1>
 
     <div class="current-summary">
-        <p class="aqi-value">AQI hiện tại: {{ current.aqi }}</p>
-        <p>PM2.5: {{ current.pm25 }} | PM10: {{ current.pm10 }}</p>
-        <p>Cập nhật: {{ current.recorded_at }}</p>
+        <p class="aqi-value
+            {% if current.aqi <= 50 %}good
+            {% elif current.aqi <= 100 %}moderate
+            {% elif current.aqi <= 150 %}sensitive
+            {% elif current.aqi <= 200 %}unhealthy
+            {% elif current.aqi <= 300 %}very-unhealthy
+            {% else %}hazardous{% endif %}">
+            AQI hiện tại: {{ current.aqi }}
+        </p>
+        <p class="pollutants">PM2.5: {{ current.pm25 }} | PM10: {{ current.pm10 }}</p>
+        <p class="updated">Cập nhật: {{ current.recorded_at }}</p>
     </div>
 
     <h2>Lịch sử 7 ngày qua</h2>

@@ -11,7 +11,15 @@
         {% for s in stations %}
         <div class="station-card">
             <h2>{{ s.name }}</h2>
-            <p class="aqi-value">AQI: {{ s.aqi }}</p>
+            <p class="aqi-value
+                {% if s.aqi <= 50 %}good
+                {% elif s.aqi <= 100 %}moderate
+                {% elif s.aqi <= 150 %}sensitive
+                {% elif s.aqi <= 200 %}unhealthy
+                {% elif s.aqi <= 300 %}very-unhealthy
+                {% else %}hazardous{% endif %}">
+                AQI: {{ s.aqi }}
+            </p>
             <p class="updated">Cập nhật: {{ s.recorded_at }}</p>
             <a href="/dashboard/{{ s.station_id }}">Xem chi tiết & lịch sử</a>
         </div>
