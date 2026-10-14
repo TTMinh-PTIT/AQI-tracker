@@ -6,7 +6,7 @@ from notifier import send_email_alert
 def job():
     conn = get_connection()
     try:
-        station_ids = ["A112819", "A476341", "A477292","@13251","@8688"]
+        station_ids = ["A112819", "A476341", "A477292","@13251","@8688","@13026"]
         for sid in station_ids:
             data = get_data(sid)
             if data and data["status"] == "ok":
