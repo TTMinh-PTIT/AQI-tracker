@@ -25,6 +25,6 @@ def job():
 
 if __name__ == '__main__':
     schedule = BlockingScheduler()
-    schedule.add_job(job,'interval',minutes = 1)
+    schedule.add_job(job,'interval',minutes = 30)
     job()
     schedule.start()
