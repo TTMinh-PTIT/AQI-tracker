@@ -93,7 +93,7 @@ def dashboard_detail(request: Request, station_id: str):
         history = get_history(conn, station_id, start, end)
         return templates.TemplateResponse(
             request=request,
-            name="station_detail.html",
+            name="station_details.html",
             context={"current": current, "history": history}
         )
     finally:
