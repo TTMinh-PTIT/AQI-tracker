@@ -19,7 +19,7 @@
             {% else %}hazardous{% endif %}">
             AQI hiện tại: {{ current.aqi }}
         </p>
-        <p class="pollutants">PM2.5: {{ current.pm25 }} | PM10: {{ current.pm10 }}</p>
+        <p class="pollutants">PM2.5: {{ current.pm25 }} | PM10: {{ current.pm10 }} | O3: {{current.o3}} | NO2: {{current.no2}} | CO: {{current.co}}</p>
         <p class="updated">Cập nhật: {{ current.recorded_at }}</p>
     </div>
 
