@@ -2,53 +2,255 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ current.name }} - Chi tiết AQI</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <a href="/dashboard" class="back-link">&larr; Quay lại danh sách</a>
-    <h1>{{ current.name }}</h1>
+    <!-- Top Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/dashboard" class="brand">
+                <div class="brand-icon">AQ</div>
+                <span class="brand-title">Hanoi AirPulse</span>
+            </a>
+            <div class="sys-badge">
+                <span class="pulse-dot"></span>
+                <span>Live Data</span>
+            </div>
+        </div>
+    </nav>
 
-    <div class="current-summary">
-        <p class="aqi-value
-            {% if current.aqi <= 50 %}good
-            {% elif current.aqi <= 100 %}moderate
-            {% elif current.aqi <= 150 %}sensitive
-            {% elif current.aqi <= 200 %}unhealthy
-            {% elif current.aqi <= 300 %}very-unhealthy
-            {% else %}hazardous{% endif %}">
-            AQI hiện tại: {{ current.aqi }}
-        </p>
-        <p class="pollutants">PM2.5: {{ current.pm25 }} | PM10: {{ current.pm10 }} | O3: {{current.o3}} | NO2: {{current.no2}} | CO: {{current.co}}</p>
-        <p class="updated">Cập nhật: {{ current.recorded_at }}</p>
+    <div class="container">
+        <a href="/dashboard" class="back-btn">&larr; Quay lại danh sách trạm</a>
+
+        {% set aqi = current.aqi %}
+        {% if aqi <= 50 %}
+            {% set status_class = "good" %}
+            {% set status_text = "Tốt (Chất lượng không khí an toàn)" %}
+            {% set reco_text = "Không khí trong lành, rất thích hợp cho các hoạt động thể thao ngoài trời." %}
+        {% elif aqi <= 100 %}
+            {% set status_class = "moderate" %}
+            {% set status_text = "Trung bình (Đạt chuẩn)" %}
+            {% set reco_text = "Nhóm người nhạy cảm nên hạn chế vận động thể lực kéo dài ngoài trời." %}
+        {% elif aqi <= 150 %}
+            {% set status_class = "sensitive" %}
+            {% set status_text = "Kém (Nhạy cảm nên chú ý)" %}
+            {% set reco_text = "Trẻ em, người già và người có bệnh hô hấp nên hạn chế ra ngoài." %}
+        {% elif aqi <= 200 %}
+            {% set status_class = "unhealthy" %}
+            {% set status_text = "Xấu (Sức khỏe bị ảnh hưởng)" %}
+            {% set reco_text = "Khuyến nghị đeo khẩu trang chống bụi mịn (N95) khi ra ngoài." %}
+        {% elif aqi <= 300 %}
+            {% set status_class = "very-unhealthy" %}
+            {% set status_text = "Rất xấu (Cảnh báo sức khỏe)" %}
+            {% set reco_text = "Mọi người nên hạn chế ra ngoài, đóng cửa sổ và bật máy lọc không khí." %}
+        {% else %}
+            {% set status_class = "hazardous" %}
+            {% set status_text = "Nguy hại (Cảnh báo khẩn cấp)" %}
+            {% set reco_text = "Tránh mọi hoạt động ngoài trời. Sử dụng máy lọc không khí liên tục." %}
+        {% endif %}
+
+        <!-- Station Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">{{ current.name }}</h1>
+                <p class="page-subtitle">Cập nhật lúc: {{ current.recorded_at }}</p>
+            </div>
+            <span class="aqi-badge {{ status_class }}" style="font-size: 1.1rem; padding: 8px 18px;">
+                AQI {{ current.aqi }} • {{ status_text }}
+            </span>
+        </div>
+
+        <!-- Health Recommendation -->
+        <div class="recommendation-box">
+            <span class="icon">💡</span>
+            <div>
+                <strong>Khuyến nghị sức khỏe:</strong>
+                <p>{{ reco_text }}</p>
+            </div>
+        </div>
+
+        <!-- Detailed Metrics Grid -->
+        <h2 class="chart-title">Chỉ số ô nhiễm chi tiết</h2>
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="label">AQI Total</div>
+                <div class="val">{{ current.aqi }}</div>
+                <div class="unit">Chỉ số tổng hợp</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">PM2.5</div>
+                <div class="val">{{ current.pm25 if current.pm25 is not none else '--' }}</div>
+                <div class="unit">&mu;g/m&sup3;</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">PM10</div>
+                <div class="val">{{ current.pm10 if current.pm10 is not none else '--' }}</div>
+                <div class="unit">&mu;g/m&sup3;</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">O3</div>
+                <div class="val">{{ current.o3 if current.o3 is not none else '--' }}</div>
+                <div class="unit">ppb</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">NO2</div>
+                <div class="val">{{ current.no2 if current.no2 is not none else '--' }}</div>
+                <div class="unit">ppb</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">CO</div>
+                <div class="val">{{ current.co if current.co is not none else '--' }}</div>
+                <div class="unit">ppm</div>
+            </div>
+        </div>
+
+        <!-- Visual Trend Chart -->
+        <div class="chart-container">
+            <h2 class="chart-title">Biểu đồ diễn biến AQI & PM2.5 (7 ngày qua)</h2>
+            <canvas id="aqiChart" height="100"></canvas>
+        </div>
+
+        <!-- History Table -->
+        <h2 class="chart-title" style="margin-top: 32px;">Lịch sử dữ liệu chi tiết</h2>
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Thời gian</th>
+                        <th>AQI</th>
+                        <th>PM2.5</th>
+                        <th>PM10</th>
+                        <th>O3</th>
+                        <th>NO2</th>
+                        <th>CO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in history %}
+                    {% set r_aqi = r.aqi %}
+                    {% if r_aqi <= 50 %}
+                        {% set r_class = "good" %}
+                    {% elif r_aqi <= 100 %}
+                        {% set r_class = "moderate" %}
+                    {% elif r_aqi <= 150 %}
+                        {% set r_class = "sensitive" %}
+                    {% elif r_aqi <= 200 %}
+                        {% set r_class = "unhealthy" %}
+                    {% elif r_aqi <= 300 %}
+                        {% set r_class = "very-unhealthy" %}
+                    {% else %}
+                        {% set r_class = "hazardous" %}
+                    {% endif %}
+                    <tr>
+                        <td><strong>{{ r.recorded_at }}</strong></td>
+                        <td><span class="table-badge aqi-badge {{ r_class }}">{{ r.aqi }}</span></td>
+                        <td>{{ r.pm25 if r.pm25 is not none else '-' }}</td>
+                        <td>{{ r.pm10 if r.pm10 is not none else '-' }}</td>
+                        <td>{{ r.o3 if r.o3 is not none else '-' }}</td>
+                        <td>{{ r.no2 if r.no2 is not none else '-' }}</td>
+                        <td>{{ r.co if r.co is not none else '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <h2>Lịch sử 7 ngày qua</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Thời gian</th>
-                <th>AQI</th>
-                <th>PM2.5</th>
-                <th>PM10</th>
-                <th>O3</th>
-                <th>NO2</th>
-                <th>CO</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for r in history %}
-            <tr>
-                <td>{{ r.recorded_at }}</td>
-                <td>{{ r.aqi }}</td>
-                <td>{{ r.pm25 }}</td>
-                <td>{{ r.pm10 }}</td>
-                <td>{{ r.o3 }}</td>
-                <td>{{ r.no2 }}</td>
-                <td>{{ r.co }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <!-- Nhúng JSON an toàn qua thẻ script ẩn, tránh lỗi syntax JS và escape HTML -->
+    <script type="application/json" id="history-raw-data">
+        {{ history | tojson | safe if history else '[]' }}
+    </script>
+
+    <!-- Khởi tạo Chart.js -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let historyData = [];
+
+            // 1. Đọc và Parse JSON từ thẻ script ẩn
+            try {
+                const rawElement = document.getElementById('history-raw-data');
+                if (rawElement && rawElement.textContent.trim()) {
+                    historyData = JSON.parse(rawElement.textContent);
+                }
+            } catch (err) {
+                console.error("Lỗi parse dữ liệu history JSON:", err);
+            }
+
+            // 2. Tránh crash nếu dữ liệu rỗng
+            if (!Array.isArray(historyData) || historyData.length === 0) {
+                console.warn("Không có dữ liệu lịch sử để hiển thị biểu đồ.");
+                return;
+            }
+
+            // 3. Đảo ngược mảng để trục X hiển thị thời gian từ cũ -> mới
+            const chartData = [...historyData].reverse();
+
+            // 4. Trích xuất mảng dữ liệu
+            const labels = chartData.map(item => item.recorded_at || '');
+            const aqiData = chartData.map(item => item.aqi ?? null);
+            const pm25Data = chartData.map(item => item.pm25 ?? null);
+
+            // 5. Khởi tạo biểu đồ
+            const chartEl = document.getElementById('aqiChart');
+            if (!chartEl) return;
+
+            const ctx = chartEl.getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Chỉ số AQI',
+                            data: aqiData,
+                            borderColor: '#38bdf8',
+                            backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#38bdf8'
+                        },
+                        {
+                            label: 'Nồng độ PM2.5 (µg/m³)',
+                            data: pm25Data,
+                            borderColor: '#f59e0b',
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.3,
+                            borderWidth: 2,
+                            pointRadius: 3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#94a3b8', font: { family: 'Inter' } }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#26334d' },
+                            ticks: { color: '#94a3b8', maxRotation: 45 }
+                        },
+                        y: {
+                            grid: { color: '#26334d' },
+                            ticks: { color: '#94a3b8' },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

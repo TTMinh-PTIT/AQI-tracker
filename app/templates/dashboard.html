@@ -2,28 +2,93 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>AQI Hà Nội</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hanoi Air Quality Monitor | Cloud Dashboard</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Chất lượng không khí Hà Nội</h1>
-    <div class="station-list">
-        {% for s in stations %}
-        <div class="station-card">
-            <h2>{{ s.name }}</h2>
-            <p class="aqi-value
-                {% if s.aqi <= 50 %}good
-                {% elif s.aqi <= 100 %}moderate
-                {% elif s.aqi <= 150 %}sensitive
-                {% elif s.aqi <= 200 %}unhealthy
-                {% elif s.aqi <= 300 %}very-unhealthy
-                {% else %}hazardous{% endif %}">
-                AQI: {{ s.aqi }}
-            </p>
-            <p class="updated">Cập nhật: {{ s.recorded_at }}</p>
-            <a href="/dashboard/{{ s.station_id }}">Xem chi tiết & lịch sử</a>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/dashboard" class="brand">
+                <div class="brand-icon">AQ</div>
+                <span class="brand-title">Hanoi AirPulse</span>
+            </a>
+            <div class="sys-badge">
+                <span class="pulse-dot"></span>
+                <span>System Operational</span>
+            </div>
         </div>
-        {% endfor %}
+    </nav>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Chất lượng không khí Hà Nội</h1>
+                <p class="page-subtitle">Hệ thống quan trắc & theo dõi thời gian thực các trạm đo AQI</p>
+            </div>
+            <div class="tech-tags">
+                <span class="tag">FastAPI</span>
+                <span class="tag">PostgreSQL</span>
+                <span class="tag">Docker</span>
+            </div>
+        </div>
+
+        <div class="station-grid">
+            {% for s in stations %}
+            {% set aqi = s.aqi %}
+            {% if aqi <= 50 %}
+                {% set status_class = "good" %}
+                {% set status_text = "Tốt" %}
+            {% elif aqi <= 100 %}
+                {% set status_class = "moderate" %}
+                {% set status_text = "Trung bình" %}
+            {% elif aqi <= 150 %}
+                {% set status_class = "sensitive" %}
+                {% set status_text = "Kém" %}
+            {% elif aqi <= 200 %}
+                {% set status_class = "unhealthy" %}
+                {% set status_text = "Xấu" %}
+            {% elif aqi <= 300 %}
+                {% set status_class = "very-unhealthy" %}
+                {% set status_text = "Rất xấu" %}
+            {% else %}
+                {% set status_class = "hazardous" %}
+                {% set status_text = "Nguy hại" %}
+            {% endif %}
+
+            <div class="station-card">
+                <div class="card-header">
+                    <h2 class="station-name">{{ s.name }}</h2>
+                    <span class="aqi-badge {{ status_class }}">{{ s.aqi }}</span>
+                </div>
+                
+                <div class="card-body">
+                    <div class="aqi-meta">
+                        <span class="aqi-number">{{ s.aqi }}</span>
+                        <span class="aqi-label {{ status_class }}">{{ status_text }}</span>
+                    </div>
+                    <div class="updated-time">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span>Cập nhật: {{ s.recorded_at }}</span>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <a href="/dashboard/{{ s.station_id }}" class="btn-detail">
+                        <span>Chi tiết & Lịch sử</span>
+                        <span>&rarr;</span>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </body>
 </html>
