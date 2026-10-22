@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi import Request
 from datetime import timedelta, datetime
+from decimal import Decimal
 import json
 
 app = FastAPI()
@@ -18,6 +19,8 @@ def tojson_filter(value):
     def default(o):
         if isinstance(0,datetime):
             return o.isoformat()
+        if isinstance(o, Decimal):
+            return float(o)
         raise TypeError(f"Type{type(o)} not serializable")
     return json.dumps(value, default=default)
 
