@@ -17,11 +17,11 @@ class Create_Alert(BaseModel):
 
 def tojson_filter(value):
     def default(o):
-        if isinstance(0,datetime):
+        if isinstance(o,datetime):
             return o.isoformat()
         if isinstance(o, Decimal):
             return float(o)
-        raise TypeError(f"Type{type(o)} not serializable")
+        raise TypeError(f"Type {type(o)} not serializable")
     return json.dumps(value, default=default)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
