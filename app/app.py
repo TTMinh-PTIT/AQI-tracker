@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi import Request
 from datetime import timedelta, datetime
+import json
 
 app = FastAPI()
 
@@ -13,9 +14,16 @@ class Create_Alert(BaseModel):
     contact: str
     threshold: int
 
+def tojson_filter(value):
+    def default(o):
+        if isinstance(0,datetime):
+            return o.isoformat()
+        raise TypeError(f"Type{type(o)} not serializable")
+    return json.dumps(value, default=default)
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
-
+templates.env.filters["tojson"] = tojson_filter
                             
 @app.get("/health", tags=["health"])
 async def liveness() -> dict:
